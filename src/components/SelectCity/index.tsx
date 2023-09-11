@@ -2,21 +2,25 @@ import './styles.css';
 import { useEffect, useState } from 'react';
 
 import { Input } from '../Input';
-import { getCityByNameService } from '../../services/getCityByNameService';
+import { getCityByNameService, CityProps } from '../../services/getCityByNameService';
 
-export function SelectCity({ onSelect }) {
-  const [city, setCity] = useState();
+interface Props {
+  onSelect: (city: CityProps) => void;
+};
+
+export function SelectCity({ onSelect }: Props) {
+  const [city, setCity] = useState<CityProps | null>();
   const [search, setSearch] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  async function getCities(name) {
+  async function getCities(name: string) {
     setIsLoading(true);
 
     const response = await getCityByNameService(name);
-
+    
     setCity(response);
     setIsLoading(false);
-  }
+  };
 
   useEffect(() => {
     if (search.trim().length === 0) {

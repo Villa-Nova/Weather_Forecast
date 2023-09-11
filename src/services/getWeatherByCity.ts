@@ -1,16 +1,47 @@
 import dayjs from "dayjs";
+import type { WeatherAPIResponseProps } from "../@types/forecast";
 
 import { api } from "./api";
 import { getNextDays } from "../utils/getNextDays";
 import { weatherIcons } from "../utils/weatherIcons";
+import { NextDaysItemsProps } from "../components/NextDaysItem";
 
-export async function getWeatherByCity({ latitude, longitude }) {
-  const { data } = await api.get(`/forecast?lat=${latitude}&lon=${longitude}`);
+interface GetWeatherByCityProps {
+  latitude: number;
+  longitude: number;
+};
+
+export interface WeatherResponseProps {
+  temp: number;
+  temp_min: number;
+  temp_max: number;
+  description: string;
+  details: typeof weatherIcons["Rain"];
+};
+
+export interface WeatherDetailsResponseProps {
+  feels_like: number;
+  probability: number;
+  wind_speed: number;
+  humidity: number;
+  temp_kf: number;
+};
+
+interface TodayProps {
+  weather: WeatherResponseProps;
+  details: WeatherDetailsResponseProps;
+};
+
+export interface GetWeatherByCityResponseProps {
+  today: TodayProps;
+  nextDays: NextDaysItemsProps[];
+};
+
+export async function getWeatherByCity({ latitude, longitude }: GetWeatherByCityProps): Promise<GetWeatherByCityResponseProps> {
+  const { data } = await api.get<WeatherAPIResponseProps>(`/forecast?lat=${latitude}&lon=${longitude}`);
   const { main, weather, wind, pop } = data.list[0];
 
-  console.log(weather)
-
-  const today = {
+  const today: TodayProps = {
     weather: {
       temp: Math.ceil(main.temp),
       temp_min: Math.floor(main.temp_min),
@@ -24,12 +55,12 @@ export async function getWeatherByCity({ latitude, longitude }) {
       wind_speed: wind.speed,
       humidity: main.humidity,
       temp_kf: Math.floor(main.temp_kf)
-    }
-  }
+    },
+  };
 
   const days = getNextDays();
-  const daysAdded = [];
-  const nextDays = [];
+  const daysAdded: string[] = [];
+  const nextDays: NextDaysItemsProps[] = [];
 
   data.list.forEach((item) => {
     const day = dayjs(new Date(item.dt_txt)).format('DD/MM');
@@ -48,8 +79,8 @@ export async function getWeatherByCity({ latitude, longitude }) {
         weather: item.weather[0].description,
         icon: details.icon_day
       });
-    }
+    };
   });
 
-  return { today, nextDays }
-}
+  return { today, nextDays };
+};

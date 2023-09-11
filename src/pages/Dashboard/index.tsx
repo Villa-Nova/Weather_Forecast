@@ -1,7 +1,8 @@
 import './styles.css';
 
 import { useEffect, useState } from 'react';
-import { getWeatherByCity } from '../../services/getWeatherByCity';
+import { CityProps } from '../../services/getCityByNameService';
+import { GetWeatherByCityResponseProps, getWeatherByCity } from '../../services/getWeatherByCity';
 
 import { Today } from '../../components/Today';
 import { Details } from '../../components/Details';
@@ -9,9 +10,9 @@ import { Loading } from '../../components/Loading';
 import { NextDays } from '../../components/NextDays';
 
 export function Dashboard() {
-  const [data, setData] = useState({});
+  const [data, setData] = useState<GetWeatherByCityResponseProps>({} as GetWeatherByCityResponseProps);
   const [isLoading, setIsLoading] = useState(true);
-  const [city, setCity] = useState(JSON.parse(localStorage.getItem('@typewheather:city')));
+  const [city, setCity] = useState<CityProps>(JSON.parse(localStorage.getItem('@typewheather:city') ?? ""));
 
   useEffect(() => {
     setIsLoading(true);
@@ -24,8 +25,8 @@ export function Dashboard() {
   }, [city]);
 
   if (isLoading) {
-    return <Loading />
-  }
+    return <Loading />;
+  };
 
   return (
     <div className='dashboard'>
@@ -33,5 +34,5 @@ export function Dashboard() {
       <Details data={data.today.details} />
       <NextDays data={data.nextDays} />
     </div>
-  )
-}
+  );
+};

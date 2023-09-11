@@ -1,6 +1,12 @@
 import './styles.css';
 
-export function WeatherItem({ icon, title, value }) {
+export interface Props {
+  icon: string;
+  title: string;
+  value: string;
+}
+
+export function WeatherItem({ icon, title, value }: Props) {
   return (
     <div className='weather-item'>
       <img src={icon} alt={title} />
