@@ -29,7 +29,7 @@ Para executar este projeto, você precisará adicionar as seguintes variáveis d
 Clone o projeto
 
 ```bash
-  git clone https://github.com/gleysonabreu/typeweather.git
+  git clone https://github.com/Villa-Nova/Weather_Forecast.git
 ```
 
 Vá para o diretório do projeto
